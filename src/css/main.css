@@ -1,0 +1,56 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 4rem;
+}
+
+/* variables */
+:root {
+    --width: 1280px;
+    --height: 50vh;
+    --block-height: 5vh;
+}
+
+/* main */
+#lift_block {
+    position: relative;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    width: var(--width);
+}
+
+/* sub div */
+.floors {
+    height: var(--height);
+}
+
+.flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+}
+
+.block {
+    max-height: var(--block-width);
+}
+
+/* outside the block*/
+.lift {
+    position: absolute;
+    bottom: 100px;
+    left: calc(var(--width) - 90%);
+    background-color: rgb(4, 178, 117);
+    width: 30px;
+    height: 80px;
+}
+
+.lift[data-value="2"] {
+    left: calc(var(--width) - 85%)
+}
