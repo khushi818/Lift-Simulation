@@ -5,7 +5,7 @@
 }
 
 body {
-    margin: 4rem;
+    margin-top: 4rem;
 }
 
 /* variables */
@@ -27,8 +27,8 @@ body {
 
 /* sub div */
 .floors {
-    height: var(--height);
-    padding-top: 20vh;
+    /* height: var(--height); */
+    /* padding-top: 20vh; */
 }
 
 
@@ -40,7 +40,7 @@ body {
 
 .block {
     width: var(--width);
-    max-height: var(--block-width);
+    height: 10vh;
     border-bottom: 1px solid black;
 }
 
