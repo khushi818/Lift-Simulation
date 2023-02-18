@@ -12,7 +12,8 @@ body {
 :root {
     --width: 1280px;
     --height: 50vh;
-    --block-height: 0px;
+    /* --block-height: 0px; */
+    --data-index: "1";
 }
 
 /* main */
@@ -40,21 +41,28 @@ body {
 
 .block {
     width: var(--width);
-    height: 10vh;
     border-bottom: 1px solid black;
+    padding-top: 4rem;
+}
+
+#lift-section {
+    position: absolute;
+    /* bottom: var(--block-height); */
+    bottom: 0px;
+    left: calc(var(--width) - 90%);
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
 }
 
 /* outside the block*/
 .lift {
-    position: absolute;
-    bottom: var(--block-height);
-    left: calc(var(--width) - 90%);
     background-color: rgb(4, 178, 117);
     width: 30px;
     height: 80px;
     transition: all 2s;
 }
 
-.lift[data-value="2"] {
+/* .lift[data-value="2"] {
     left: calc(var(--width) - 85%)
-}
+} */
