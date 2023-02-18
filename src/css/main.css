@@ -12,7 +12,7 @@ body {
 :root {
     --width: 1280px;
     --height: 50vh;
-    --block-height: 5vh;
+    --block-height: 0px;
 }
 
 /* main */
@@ -28,27 +28,31 @@ body {
 /* sub div */
 .floors {
     height: var(--height);
+    padding-top: 20vh;
 }
 
-.flex {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-direction: column;
+
+.grid {
+    display: grid;
+    grid-gap: 0px;
+    border-bottom: 1px solid black;
 }
 
 .block {
+    width: var(--width);
     max-height: var(--block-width);
+    border-bottom: 1px solid black;
 }
 
 /* outside the block*/
 .lift {
     position: absolute;
-    bottom: 100px;
+    bottom: var(--block-height);
     left: calc(var(--width) - 90%);
     background-color: rgb(4, 178, 117);
     width: 30px;
     height: 80px;
+    transition: all 2s;
 }
 
 .lift[data-value="2"] {
