@@ -16,6 +16,14 @@ body {
     --data-index: "1";
 }
 
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    gap: 40px;
+}
+
 /* main */
 #lift_block {
     position: relative;
@@ -26,14 +34,11 @@ body {
     width: var(--width);
 }
 
-/* sub div */
+/* sub div
 .floors {
     /* height: var(--height); */
-    /* padding-top: 20vh; */
-}
-
-
-.grid {
+/* padding-top: 20vh; */
+*/ .grid {
     display: grid;
     grid-gap: 0px;
     border-bottom: 1px solid black;

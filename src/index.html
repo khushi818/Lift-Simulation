@@ -11,9 +11,21 @@
 </head>
 
 <body>
+    <header id="input_fields">
+        <form id="form" method="GET">
+
+            <label for="no_of_floor">Enter Number of floors</label>
+            <input id="no_oF_floor" type="number" placeholder="enter number" value="" required>
+
+            <label for="no_of_lift">Enter Number of lift</label>
+            <input id="no_of_lift" type="number" placeholder="enter number" value="" required>
+
+        </form>
+        <button id="btn" type="submit">Generate</button>
+    </header>
     <main id="lift_block">
         <div class="floors grid" id="blocks">
-            <div class="block" data-column="0">
+            <!-- <div class="block" data-column="0">
                 <button class="above">Up</button>
                 <button class="below">down</button>
             </div>
@@ -24,14 +36,14 @@
             <div class="block" data-column="2">
                 <button class="above">Up</button>
                 <button class="below">down</button>
-            </div>
+            </div> -->
             <div id="lift-section">
-                <div class="lift" id="0" data-value="0" data-status="free">
+                <!-- <div class="lift" id="0" data-value="0" data-status="free">
                 </div>
                 <div class="lift" id="1" data-value="1" data-status="free">
                 </div>
                 <div class="lift" id="2" data-value="2" data-status="free">
-                </div>
+                </div> -->
             </div>
         </div>
     </main>

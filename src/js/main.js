@@ -3,7 +3,46 @@ const root = document.querySelector(':root')
 const up = document.querySelectorAll('.above')
 const down = document.querySelectorAll('.below')
 const lift_class = document.querySelectorAll('.lift')
-const array_of_block_lift = [0,0,0]
+const generate = document.getElementById("btn")
+
+
+
+
+generate.addEventListener('click',()=>
+{
+   const floors = document.getElementById("no_oF_floor").value
+   const lift = document.getElementById("no_of_lift").value
+   for(let i = 0 ; i < floors ; i++)
+   {
+      const parent = document.querySelector(".floors");
+      const div = document.createElement('div')
+      div.classList.add('block');
+      div.dataset.column = i;
+      div.innerHTML += '<button class="above">Up</button><button class="below">down</button>'
+      parent.appendChild(div);
+   }
+
+   for(let i = 0 ; i < lift ; i++)
+   {
+      console.log(lift)
+      const parent = document.getElementById("lift-section");
+      parent.innerHTML += `<div class="lift" id=${i} data-value="${i}" data-status="free"></div>`
+      
+   }
+})
+
+/*height of the seperate block*/
+let height = val.children[0].offsetHeight;
+console.log(height)
+
+
+// let array_of_block_lift = new Array(3);
+// for (let i=0; i<3; ++i) {
+//             array_of_block_lift[i] = 0;
+// }
+ let array_of_block_lift =[0,0,0]  
+
+
 /* to check the status*/
 const check_status = () =>{ 
     let val = lift_class[0];
@@ -21,6 +60,7 @@ const check_status = () =>{
 
 console.log(check_status().dataset.value)
 
+/* determine the position of lift*/
 const block_of_lift = () =>{
     let div_lift = check_status()
     console.log(div_lift)
@@ -30,10 +70,6 @@ const block_of_lift = () =>{
     return [div_lift,block]
 }
 
-
-/*height of the seperate block*/
-const height =val.children[0].offsetHeight;
-console.log(height)
 
 let previous_block = 0;
 
