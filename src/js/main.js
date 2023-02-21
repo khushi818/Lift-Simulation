@@ -1,27 +1,45 @@
 const val = document.getElementById('blocks')
 const root = document.querySelector(':root')
-const up = document.querySelectorAll('.above')
-const down = document.querySelectorAll('.below')
-const lift_class = document.querySelectorAll('.lift')
 const generate = document.getElementById("btn")
+const header = document.getElementById("input_fields")
+const refresh = document.getElementById("refresh")
 
+console.log(Date.now())
+let array_of_block_lift =[]   
 
-
+refresh.addEventListener('click',()=>{
+    window.location.reload()
+}) 
 
 generate.addEventListener('click',()=>
 {
-   const floors = document.getElementById("no_oF_floor").value
+   const floors = document.getElementById("no_of_floor").value
    const lift = document.getElementById("no_of_lift").value
-   for(let i = 0 ; i < floors ; i++)
+   
+   header.style.display = "none" 
+   refresh.style.display = "block"  
+   /* generate floors */
+   for(let idx = 0 ; idx < floors ; idx++)
    {
       const parent = document.querySelector(".floors");
       const div = document.createElement('div')
       div.classList.add('block');
-      div.dataset.column = i;
+      div.dataset.column = idx;
+      if(idx === floors-1)
+      {
+         div.innerHTML += '<button class="above">Up</button>'
+      }
+      else if(idx === 0)
+      {
+         div.innerHTML += '<button class="below">down</button>'
+      }
+      else{
       div.innerHTML += '<button class="above">Up</button><button class="below">down</button>'
+      }
       parent.appendChild(div);
    }
 
+   /* generate lift */
    for(let i = 0 ; i < lift ; i++)
    {
       console.log(lift)
@@ -29,22 +47,42 @@ generate.addEventListener('click',()=>
       parent.innerHTML += `<div class="lift" id=${i} data-value="${i}" data-status="free"></div>`
       
    }
+    
+   /* dom for buttons and lift*/
+   const up = document.querySelectorAll('.above')
+   const down = document.querySelectorAll('.below')
+   const lift_class = document.querySelectorAll('.lift')
+   
+   /* height*/
+   let height = val.offsetHeight/floors;
+   console.log(height/floors)
+   let max_limit = height*(floors-1);   
+   for (let i=0; i< lift; ++i) {
+            array_of_block_lift[i] = 0;
+   }
+
+   /*move the lift up */ 
+   up.forEach(item => {
+              item.addEventListener('click', (e)=>{
+              up_above(height,lift_class,max_limit)
+   });
+    
+   })
+   
+
+   /* move down lift*/
+   down.forEach(item => {
+    item.addEventListener('click', (e)=>{
+    down_below(height,lift_class)
+    });
+    
+   })
 })
 
-/*height of the seperate block*/
-let height = val.children[0].offsetHeight;
-console.log(height)
-
-
-// let array_of_block_lift = new Array(3);
-// for (let i=0; i<3; ++i) {
-//             array_of_block_lift[i] = 0;
-// }
- let array_of_block_lift =[0,0,0]  
 
 
 /* to check the status*/
-const check_status = () =>{ 
+const check_status = (lift_class) =>{ 
     let val = lift_class[0];
     console.log(val)
     for(let lift of lift_class){
@@ -54,70 +92,57 @@ const check_status = () =>{
            break;
         }
       }
-    
+
     return val
 }
 
-console.log(check_status().dataset.value)
-
 /* determine the position of lift*/
-const block_of_lift = () =>{
-    let div_lift = check_status()
+const block_of_lift = (height,lift_class) =>{
+    let div_lift = check_status(lift_class)
     console.log(div_lift)
     let block = div_lift.dataset.value; 
-    console.log(block)
     console.log(array_of_block_lift[block] + (height))
     return [div_lift,block]
 }
 
+/* evenlistener function to go up*/
+const up_above = (height,lift_class,max_limit) => {
+   let [div_lift,block] = block_of_lift(height,lift_class)
+      
+   if(array_of_block_lift[block] < max_limit){
+      document.getElementById(`${block}`).style.transform = `translateY(-${array_of_block_lift[block]}px)`
+      array_of_block_lift[block] += height; 
+    
+         div_lift.dataset.status = "busy"
+         setTimeout(()=>{ 
+         div_lift.dataset.status = "free"
+     },2000)
+   }
+   else{
+      console.log("Sorry lift can't fly in sky")
+   }
+}
 
-let previous_block = 0;
+/* eventlistener function to go down*/   
+const down_below =(height,lift_class) =>{
+   let [div_lift,block] = block_of_lift(height,lift_class)
+   console.log(block)
+   console.log(array_of_block_lift[block])
 
-up.forEach(item => {
-  /* different floors */
-  item.addEventListener('click', (e)=>{
-    let [div_lift,block] = block_of_lift()
-    console.log(block)
-    array_of_block_lift[block] += height;  
+   if(array_of_block_lift[block] >= 0)
+   {
+    array_of_block_lift[block] -= height;  
+     
     document.getElementById(`${block}`).style.transform = `translateY(-${array_of_block_lift[block]}px)`
     
     div_lift.dataset.status = "busy"
        setTimeout(()=>{ 
         div_lift.dataset.status = "free"
-     },2000)
-         // e.defaultPrevent();    
-    //  let total = 2-item.parentElement.dataset.column
-    //  let block_style = getComputedStyle(root,null);
-    //  let block = block_style.getPropertyValue('--block-height');// value of lift position
- // block = parseInt(block.replace('px',''))
-       //  if((total * height) !== previous_block)
-    //  {
-    //   console.log(`total:${total} & block:${block} = ${total * height}`)
-    //   root.style.setProperty('--block-height', `${(total * height)}px`)
-    //   previous_block = block   
-    //  } 
-    //  else
-    //  { 
-    // //  root.style.setProperty('--block-height', `${block + height}px`)
-    //  div_lift.dataset.value.style.bottom = `${block + height}px`
-   
-    //  } 
- })
-});
-
-
-down.forEach(item => {
- item.addEventListener('click', ()=>{
-    let [div_lift,block] = block_of_lift()
-    array_of_block_lift[block] -= height;  
-    document.getElementById(`${block}`).style.transform = `translateY(-${array_of_block_lift[block]}px)`
-  
-    div_lift.dataset.status = "busy"
-       setTimeout(()=>{ 
-        div_lift.dataset.status = "free"
-     },2000)
-  
-})
-});
+    },2000)
+   }
+   else {
+    console.log("the ground is solid sorry it needs power to break it");  
+   }     
+}
 
 
