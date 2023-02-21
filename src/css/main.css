@@ -4,9 +4,7 @@
     box-sizing: border-box;
 }
 
-body {
-    margin-top: 4rem;
-}
+
 
 /* variables */
 :root {
@@ -14,18 +12,83 @@ body {
     --height: 50vh;
     /* --block-height: 0px; */
     --data-index: "1";
+    --primary-color: #29013D;
+    --secondary-color: #EAEEF1;
+    --tertiary-color: #B268DF;
+}
+
+body {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
 }
 
 header {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 40px;
+    margin: 5vh auto;
+    max-width: 400px;
+    background-color: var(--tertiary-color);
+    padding: 30px 10px;
+    border-radius: 25px;
+}
+
+form {
+    display: flex;
+    justify-content: center;
     align-items: center;
     flex-direction: column;
     gap: 40px;
 }
 
+form div {
+    display: flex;
+    justify-content: left;
+    align-items: left;
+    gap: 20px;
+    flex-direction: column;
+}
+
+img {
+    width: 40%;
+    margin-left: 25%;
+}
+
+input {
+    width: 100%;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+button {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+
+#btn:hover {
+    background-color: var(--tertiary-color);
+}
+
+
 #refresh {
     display: none;
+    background-color: var(--tertiary-color);
+    /*color: var(--secondary-color);
+    padding: 10px;
+    border-radius: 10px;
+    margin: 20px; */
+}
+
+.above,
+.below {
+    background-color: var(--tertiary-color);
+    padding: 10px;
 }
 
 /* main */
@@ -38,11 +101,7 @@ header {
     width: var(--width);
 }
 
-/* sub div
-.floors {
-    /* height: var(--height); */
-/* padding-top: 20vh; */
-*/ .grid {
+.grid {
     display: grid;
     grid-gap: 0px;
     border-bottom: 1px solid black;
@@ -50,8 +109,27 @@ header {
 
 .block {
     width: var(--width);
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid var(--secondary-color);
     padding-top: 4rem;
+}
+
+.floors {
+    max-width: 75%;
+}
+
+input[type=checkbox] {
+    position: absolute;
+    /* Force the checkbox at the start of the container */
+    cursor: pointer;
+    /* Indicate the curtain is clickable */
+    width: 100%;
+    /* The checkbox is as wide as the component */
+    height: 100%;
+    /* The checkbox is as tall as the component */
+    z-index: 100;
+    /* Make sure the checkbox is on top of everything else */
+    opacity: 0;
+    /* Hide the checkbox */
 }
 
 #lift-section {
@@ -67,30 +145,51 @@ header {
 /* outside the block*/
 .lift {
     position: relative;
-    background-color: rgb(4, 178, 117);
+    background-color: var(--tertiary-color);
     width: 50px;
     height: 80px;
-    transition: all 2s;
-
+    transition: all 1s ease-out;
+    overflow: hidden;
 }
 
-.lift::after {
+input[type=checkbox]:checked~div.lift-left {
+    transform: translateX(0);
+}
+
+/* Slide the second panel in */
+input[type=checkbox]:checked~div.lift-right {
+    transform: translateX(0);
+}
+
+.lift-left {
     content: '';
     position: absolute;
     left: 5px;
     top: 10px;
     right: 25px;
     bottom: 0;
-    background-color: black;
+    border: 1px solid var(--primary-color);
+    background-color: var(--secondary-color);
+    transform-origin: right;
+    transform: translateX(-100%);
+    transition: all 1s;
+
 }
 
-.lift::before {
+/* .lift-left:hover {
+    transform: translateX(-100%);
+} */
+
+.lift-right {
     content: '';
     position: absolute;
     left: 25px;
     top: 10px;
     right: 5px;
     bottom: 0;
-    background-color: black;
-
+    border: 1px solid var(--primary-color);
+    background-color: var(--secondary-color);
+    transform-origin: left;
+    transform: translateX(100%);
+    transition: all 1s;
 }

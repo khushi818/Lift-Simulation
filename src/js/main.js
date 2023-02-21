@@ -44,7 +44,7 @@ generate.addEventListener('click',()=>
    {
       console.log(lift)
       const parent = document.getElementById("lift-section");
-      parent.innerHTML += `<div class="lift" id=${i} data-value="${i}" data-status="free"></div>`
+      parent.innerHTML += `<div class="lift" id=${i} data-value="${i}" data-status="free"><input type="checkbox" checked><div class="lift-left"></div><div class="lift-right"></div></div>`
       
    }
     
@@ -56,8 +56,8 @@ generate.addEventListener('click',()=>
    /* height*/
    let height = val.offsetHeight/floors;
    console.log(height/floors)
-   let max_limit = height*(floors-1);   
-   for (let i=0; i< lift; ++i) {
+   let max_limit = height * floors;   
+   for (let i=0; i< lift; i++) {
             array_of_block_lift[i] = 0;
    }
 
@@ -110,14 +110,14 @@ const up_above = (height,lift_class,max_limit) => {
    let [div_lift,block] = block_of_lift(height,lift_class)
     
    if(array_of_block_lift[block] < max_limit){
-      
+      console.log(array_of_block_lift[block])
       array_of_block_lift[block] += height;
       document.getElementById(`${block}`).style.transform = `translateY(-${array_of_block_lift[block]}px)`
 
-         div_lift.dataset.status = "busy"
+      div_lift.dataset.status = "busy"
       setTimeout(()=>{ 
          div_lift.dataset.status = "free"
-     },2000)
+      },2000)
    }
    else{
       console.log("Sorry lift can't fly in sky")
@@ -128,16 +128,15 @@ const up_above = (height,lift_class,max_limit) => {
 const down_below =(height,lift_class) =>{
    let [div_lift,block] = block_of_lift(height,lift_class)
    console.log(block)
-   console.log(array_of_block_lift[block])
+   console.log(array_of_block_lift)
 
-   if(array_of_block_lift[block] >= (-height))
+   if(array_of_block_lift[block] >= 0)
    {
     array_of_block_lift[block] -= height;  
-     
     document.getElementById(`${block}`).style.transform = `translateY(-${array_of_block_lift[block]}px)`
     
     div_lift.dataset.status = "busy"
-       setTimeout(()=>{ 
+    setTimeout(()=>{ 
         div_lift.dataset.status = "free"
     },2000)
    }
