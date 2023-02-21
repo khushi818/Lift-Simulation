@@ -44,7 +44,7 @@ generate.addEventListener('click',()=>
    {
       console.log(lift)
       const parent = document.getElementById("lift-section");
-      parent.innerHTML += `<div class="lift" id=${i} data-value="${i}" data-status="free"><input type="checkbox" checked><div class="lift-left"></div><div class="lift-right"></div></div>`
+      parent.innerHTML += `<div class="lift" id=${i} data-value="${i}" data-status="free"><input id = "checkbox" type="checkbox" checked><div class="lift-left"></div><div class="lift-right"></div></div>`
       
    }
     
@@ -52,11 +52,12 @@ generate.addEventListener('click',()=>
    const up = document.querySelectorAll('.above')
    const down = document.querySelectorAll('.below')
    const lift_class = document.querySelectorAll('.lift')
+   const open_lift = document.getElementById("checkbox")
    
    /* height*/
    let height = val.offsetHeight/floors;
    console.log(height/floors)
-   let max_limit = height * floors;   
+   let max_limit = height * (floors-1);   
    for (let i=0; i< lift; i++) {
             array_of_block_lift[i] = 0;
    }
@@ -64,7 +65,7 @@ generate.addEventListener('click',()=>
    /*move the lift up */ 
    up.forEach(item => {
               item.addEventListener('click', (e)=>{
-              up_above(height,lift_class,max_limit)
+              up_above(height,lift_class,max_limit,open_lift)
    });
     
    })
@@ -106,17 +107,25 @@ const block_of_lift = (height,lift_class) =>{
 }
 
 /* evenlistener function to go up*/
-const up_above = (height,lift_class,max_limit) => {
+const up_above = (height,lift_class,max_limit,open_lift) => {
    let [div_lift,block] = block_of_lift(height,lift_class)
     
    if(array_of_block_lift[block] < max_limit){
       console.log(array_of_block_lift[block])
       array_of_block_lift[block] += height;
       document.getElementById(`${block}`).style.transform = `translateY(-${array_of_block_lift[block]}px)`
-
+      setTimeout(()=>{
+      open_lift.checked = false
+      },1000)
       div_lift.dataset.status = "busy"
+      console.log(open_lift.checked)
       setTimeout(()=>{ 
+         setTimeout(()=>{
+         open_lift.checked = true
+      },1000)
+         
          div_lift.dataset.status = "free"
+         
       },2000)
    }
    else{
