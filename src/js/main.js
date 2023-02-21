@@ -108,20 +108,21 @@ const block_of_lift = (height,lift_class) =>{
 /* evenlistener function to go up*/
 const up_above = (height,lift_class,max_limit) => {
    let [div_lift,block] = block_of_lift(height,lift_class)
-      
-   if(array_of_block_lift[block] < max_limit){
-      document.getElementById(`${block}`).style.transform = `translateY(-${array_of_block_lift[block]}px)`
-      array_of_block_lift[block] += height; 
     
+   if(array_of_block_lift[block] < max_limit){
+      
+      array_of_block_lift[block] += height;
+      document.getElementById(`${block}`).style.transform = `translateY(-${array_of_block_lift[block]}px)`
+
          div_lift.dataset.status = "busy"
-         setTimeout(()=>{ 
+      setTimeout(()=>{ 
          div_lift.dataset.status = "free"
      },2000)
    }
    else{
       console.log("Sorry lift can't fly in sky")
    }
-}
+   }
 
 /* eventlistener function to go down*/   
 const down_below =(height,lift_class) =>{
@@ -129,7 +130,7 @@ const down_below =(height,lift_class) =>{
    console.log(block)
    console.log(array_of_block_lift[block])
 
-   if(array_of_block_lift[block] >= 0)
+   if(array_of_block_lift[block] >= (-height))
    {
     array_of_block_lift[block] -= height;  
      
