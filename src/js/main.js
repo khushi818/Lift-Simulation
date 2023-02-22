@@ -81,11 +81,13 @@ generate.addEventListener('click',()=>
    })
    
 
-   // /* move down lift*/
-   // down.forEach(item => {
-   //  item.addEventListener('click', (e)=>{
-   //  down_below(height,lift_class)
-   //  });
+   down.forEach(item => {
+            item.addEventListener('click', (e)=>{ 
+            let total = (floors-1) - item.parentElement.dataset.column
+            down_below(height,lift_class,max_limit,checkboxes,total)
+   });
+    
+   })
     
    // })
 })
@@ -142,56 +144,67 @@ const up_above = (height,lift_class,max_limit,checkboxes,total) => {
               },2500)
          },2500)    
       },0)
-      // setTimeout(()=>{ 
-      //   div_lift.dataset.status = "busy"   
-      // },2000)   
-      // document.getElementById(`${block}`).style.transform = `translateY(-${array_of_block_lift[block]}px)`  
-      // div_lift.dataset.status = "busy"
-
-//timeFrame_lift(start,block,div_lift)
-      
-      
-      
-      // console.log(open_lift.checked)
-
-      // setTimeout(()=>{ 
-      //    setTimeout(()=>{
-      //    open_lift.checked = true
-      // },1000)
-         
-      // div_lift.dataset.status = "free"
-         
-      // },2000)
+    
    }
    else{
       console.log("Sorry lift can't fly in sky")
    }
 }
 
-/* eventlistener function to go down*/   
-const down_below =(height,lift_class,open_lift) =>{
+const down_below = (height,lift_class,max_limit,checkboxes,total) => {
    let [div_lift,block] = block_of_lift(height,lift_class)
+   let open_lift = checkboxes[div_lift.dataset.value]
+   console.log(open_lift)
+   console.log(total)
+   if(array_of_block_lift[block] < max_limit){
+      console.log("array block" + array_of_block_lift[block])
+      console.log("multiply " + (height*total) )     
+      
+      array_of_block_lift[block] = (height*total);
+
+      div_lift.dataset.status = "busy"
+      lift_info.push(div_lift)
+      setTimeout(()=>{
+         document.getElementById(`${block}`).style.transform = `translateY(-${array_of_block_lift[block]}px)`
+            setTimeout(()=>{
+               open_lift.checked = false 
+                  setTimeout(()=>{ 
+                     open_lift.checked = true
+                     lift_info[0].dataset.status = "free"
+                     lift_info.shift()
+              },2500)
+         },2500)    
+      },0)
+    
+   }
+   else{
+      console.log("Sorry lift can't fly in sky")
+   }
+}
+/* eventlistener function to go down*/   
+// const down_below =(height,lift_class,open_lift) =>{
+//    let [div_lift,block] = block_of_lift(height,lift_class)
        
-   if(array_of_block_lift[block] >= 0){
-      console.log(array_of_block_lift[block])
-      array_of_block_lift[block] -= height;
+//    if(array_of_block_lift[block] >= 0){
+//       console.log(array_of_block_lift[block])
+//       array_of_block_lift[block] -= height;
      
       
-      lift_info.push(div_lift) 
-      // let start = Date.now();
-      // let timepassed = Date.now() - start;
-      setTimeout(()=>{ 
-         lift_info[0].dataset.status = "free"
-         lift_info.shift()
-         return;
-      },2000)
+//       lift_info.push(div_lift) 
+//       // let start = Date.now();
+//       // let timepassed = Date.now() - start;
+//       setTimeout(()=>{ 
+//          lift_info[0].dataset.status = "free"
+//          lift_info.shift()
+//          return;
+//       },2000)
    
       
-      console.log(lift_info)
-      document.getElementById(`${block}`).style.transform = `translateY(-${array_of_block_lift[block]}px)`  
-      div_lift.dataset.status = "busy"
+//       console.log(lift_info)
+//       document.getElementById(`${block}`).style.transform = `translateY(-${array_of_block_lift[block]}px)`  
+//       div_lift.dataset.status = "busy"
    
-}
-}
+// }
+// }
 
 
