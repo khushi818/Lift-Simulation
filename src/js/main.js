@@ -12,6 +12,7 @@ refresh.addEventListener('click',()=>{
 
 generate.addEventListener('click',()=>
 {
+   
    const floors = document.getElementById("no_of_floor").value
    const lifts = document.getElementById("no_of_lift").value
    

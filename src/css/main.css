@@ -86,7 +86,7 @@ button {
 }
 
 #message {
-    margin: 0 auto;
+    margin-top: 2rem;
     font-size: 24px;
     color: var(--secondary-color);
 }
