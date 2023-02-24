@@ -85,11 +85,14 @@ generate.addEventListener('click',()=>
          
    })
 
-   // down.forEach(item => {
-   //          console.log(`parentElement = ${item.parentElement}`)
-   //          let floor = item.parentElement.dataset.column
-   //          lift_call(height,lift_class,checkboxes,floor)
-   // });
+   down.forEach(item => {
+        item.addEventListener('click', (e)=>{
+            console.log(`parentElement = ${item.parentElement}`)
+            let floor = item.parentElement.dataset.column
+            lift_call(height,lift_class,checkboxes,floor)
+        })
+      }
+   )
     
 })
 
