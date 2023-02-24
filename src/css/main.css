@@ -4,8 +4,6 @@
     box-sizing: border-box;
 }
 
-
-
 /* variables */
 :root {
     --width: 1280px;
@@ -89,6 +87,8 @@ button {
     margin-top: 2rem;
     font-size: 24px;
     color: var(--secondary-color);
+    visibility: hidden;
+    margin: 0 auto;
 }
 
 .above,

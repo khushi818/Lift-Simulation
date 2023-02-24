@@ -4,20 +4,25 @@ const generate = document.getElementById("btn")
 const header = document.getElementById("input_fields")
 const refresh = document.getElementById("refresh")
 const message = document.getElementById('message')
-let array_of_block_lift =[]   
 
+
+let array_of_block_lift =[] // stores floors distance   
+
+/* refresh the page */
 refresh.addEventListener('click',()=>{
     window.location.reload()
 }) 
 
+/* generate lifts and floor*/
 generate.addEventListener('click',()=>
 {
-   
+   message.style.visibility = "visible"
    const floors = document.getElementById("no_of_floor").value
    const lifts = document.getElementById("no_of_lift").value
    
    header.style.display = "none" 
-   refresh.style.display = "block"  
+   refresh.style.display = "block"
+
    /* generate floors */
    for(let idx = 0 ; idx < floors ; idx++)
    {
@@ -76,7 +81,9 @@ generate.addEventListener('click',()=>
    
    console.log(up.forEach(floors => console.log(floors.parentNode)))
    console.log(down.forEach(floors => console.log(floors.parentNode)))
-   // /*move the lift up */ 
+    
+   /* to move lifts */
+
    up.forEach(item => {
             item.addEventListener('click', (e)=>{ 
               console.log(`parentElement = ${item.parentElement}`)
