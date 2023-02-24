@@ -13,7 +13,7 @@ refresh.addEventListener('click',()=>{
 generate.addEventListener('click',()=>
 {
    const floors = document.getElementById("no_of_floor").value
-   const lift = document.getElementById("no_of_lift").value
+   const lifts = document.getElementById("no_of_lift").value
    
    header.style.display = "none" 
    refresh.style.display = "block"  
@@ -23,7 +23,7 @@ generate.addEventListener('click',()=>
       const parent = document.querySelector(".floors");
       const div = document.createElement('div')
       div.classList.add('block');
-      div.dataset.column = idx;
+      div.dataset.column = (floors-1) - idx;
       if(idx === floors-1)
       {
          div.innerHTML += '<button class="above">Up</button>'
@@ -39,11 +39,11 @@ generate.addEventListener('click',()=>
    }
 
    /* generate lift */
-   for(let i = 0 ; i < lift ; i++)
+   for(let i = 0 ; i < lifts ; i++)
    {
-      console.log(lift)
+      console.log(lifts)
       const parent = document.getElementById("lift-section");
-      parent.innerHTML += `<div class="lift" id=${i} data-value="${i}" data-status="free"><input id = "checkbox" class=${i} type="checkbox" checked><div class="lift-left"></div><div class="lift-right"></div></div>`
+      parent.innerHTML += `<div class="lift" id=${i} data-value="${i}" data-current = "0" data-status="free"><input id = "checkbox" class=${i} type="checkbox" checked><div class="lift-left"></div><div class="lift-right"></div></div>`
       
    }
     
@@ -53,6 +53,7 @@ generate.addEventListener('click',()=>
    const lift_class = document.querySelectorAll('.lift')
    const input = document.getElementsByTagName('input')
    
+   console.log(lift_class)
    let checkboxes =[]
    for(let i = 0 ; i < input.length ; i++)
    {
@@ -66,145 +67,81 @@ generate.addEventListener('click',()=>
    /* height*/
    let height = (val.offsetHeight)/floors;
    console.log(height*floors)
-   let max_limit = height * (floors-1);   
-   for (let i=0; i< lift; i++) {
+
+   for (let i=0; i< lifts; i++) {
             array_of_block_lift[i] = 0;
    }
-
+   
+   
+   console.log(up.forEach(floors => console.log(floors.parentNode)))
+   console.log(down.forEach(floors => console.log(floors.parentNode)))
    // /*move the lift up */ 
    up.forEach(item => {
             item.addEventListener('click', (e)=>{ 
-              let total = (floors-1) - item.parentElement.dataset.column
-              up_above(height,lift_class,max_limit,checkboxes,total)
-   });
-    
+              console.log(`parentElement = ${item.parentElement}`)
+              let floor = item.parentElement.dataset.column
+              lift_call(height,lift_class,checkboxes,floor)
+            });
+         
    })
-   
 
-   down.forEach(item => {
-            item.addEventListener('click', (e)=>{ 
-            let total = (floors-1) - item.parentElement.dataset.column
-            down_below(height,lift_class,max_limit,checkboxes,total)
-   });
+   // down.forEach(item => {
+   //          console.log(`parentElement = ${item.parentElement}`)
+   //          let floor = item.parentElement.dataset.column
+   //          lift_call(height,lift_class,checkboxes,floor)
+   // });
     
-   })
-    
-   // })
 })
 
 
 
 /* to check the status*/
 const check_status = (lift_class) =>{ 
-   let val = lift_class[0];
-    console.log(val)
-    for(let lift of lift_class){
-        if(lift.dataset.status === "free")
-        {
-           val = lift
-           break;
-        }
-      }
-
-    return val;
+    const lift = Object.values(lift_class).filter((lift_block)=>{
+         return lift_block.dataset.status === "free"
+    })[0]
+    if(!lift) return setTimeout(()=>{ check_status(lift_class) },2000)
+    return lift
 }
-
 /* determine the position of lift*/
-const block_of_lift = (height,lift_class) =>{
-    let div_lift = check_status(lift_class)
-    console.log(div_lift)
-    let block = div_lift.dataset.value; 
-    console.log(array_of_block_lift[block] + (height))
-    return [div_lift,block]
+const check_height_and_lift_number = (height,lift_class) =>{
+    let lift =  check_status(lift_class)  
+    console.log(lift)
+    lift_id = lift.dataset.value ;
+    return [lift,lift_id]
 }
 
-let lift_info =[]
 /* evenlistener function to go up*/
-const up_above = (height,lift_class,max_limit,checkboxes,total) => {
-   let [div_lift,block] = block_of_lift(height,lift_class)
-   let open_lift = checkboxes[div_lift.dataset.value]
-   console.log(open_lift)
-   console.log(total)
-   if(array_of_block_lift[block] < max_limit){
-      console.log("array block" + array_of_block_lift[block])
-      console.log("multiply " + (height*total) )     
-      
-      array_of_block_lift[block] = (height*total);
+const lift_call = (height,lift_class,checkboxes,floor) => {
+   let [lift,lift_id] = check_height_and_lift_number(height,lift_class)
 
-      div_lift.dataset.status = "busy"
-      lift_info.push(div_lift)
-      setTimeout(()=>{
-         document.getElementById(`${block}`).style.transform = `translateY(-${array_of_block_lift[block]}px)`
+   console.log(`floor = ${floor}`)
+   console.log(`the position = ${height * floor}`)
+   
+   console.log(`difference in floor(${Math.abs(lift.dataset.current - floor)})`)
+   let floor_distance = height * floor
+   array_of_block_lift[lift_id] = floor_distance
+   let floor_difference = Math.abs(lift.dataset.current - floor)  
+   setTimeout(()=>{  
+        lift.dataset.status = "busy"
+        document.getElementById(`${lift_id}`).style.transform = `translateY(-${array_of_block_lift[lift_id]}px)`
+        document.getElementById(`${lift_id}`).style.transitionDuration = `${2 * floor_difference}s`
+        lift.dataset.current = floor
+        setTimeout(()=>{
+            if(lift.dataset.current === floor)
+            {
+            checkboxes[lift.dataset.value].checked = false
+            checkboxes[lift.dataset.value].style.transitionDuration = `2.5s`
+            }
             setTimeout(()=>{
-               open_lift.checked = false 
-                  setTimeout(()=>{ 
-                     open_lift.checked = true
-                     lift_info[0].dataset.status = "free"
-                     lift_info.shift()
-              },2500)
-         },2500)    
-      },0)
-    
-   }
-   else{
-      console.log("Sorry lift can't fly in sky")
-   }
+               checkboxes[lift.dataset.value].checked = true
+               setTimeout(()=>{
+                    lift.dataset.status = "free"
+               },2500)
+            },2500)
+         },`${2 * floor_difference*1000}`);
+   },0)
 }
 
-const down_below = (height,lift_class,max_limit,checkboxes,total) => {
-   let [div_lift,block] = block_of_lift(height,lift_class)
-   let open_lift = checkboxes[div_lift.dataset.value]
-   console.log(open_lift)
-   console.log(total)
-   if(array_of_block_lift[block] < max_limit){
-      console.log("array block" + array_of_block_lift[block])
-      console.log("multiply " + (height*total) )     
-      
-      array_of_block_lift[block] = (height*total);
-
-      div_lift.dataset.status = "busy"
-      lift_info.push(div_lift)
-      setTimeout(()=>{
-         document.getElementById(`${block}`).style.transform = `translateY(-${array_of_block_lift[block]}px)`
-            setTimeout(()=>{
-               open_lift.checked = false 
-                  setTimeout(()=>{ 
-                     open_lift.checked = true
-                     lift_info[0].dataset.status = "free"
-                     lift_info.shift()
-              },2500)
-         },2500)    
-      },0)
-    
-   }
-   else{
-      console.log("Sorry lift can't fly in sky")
-   }
-}
-/* eventlistener function to go down*/   
-// const down_below =(height,lift_class,open_lift) =>{
-//    let [div_lift,block] = block_of_lift(height,lift_class)
-       
-//    if(array_of_block_lift[block] >= 0){
-//       console.log(array_of_block_lift[block])
-//       array_of_block_lift[block] -= height;
-     
-      
-//       lift_info.push(div_lift) 
-//       // let start = Date.now();
-//       // let timepassed = Date.now() - start;
-//       setTimeout(()=>{ 
-//          lift_info[0].dataset.status = "free"
-//          lift_info.shift()
-//          return;
-//       },2000)
-   
-      
-//       console.log(lift_info)
-//       document.getElementById(`${block}`).style.transform = `translateY(-${array_of_block_lift[block]}px)`  
-//       div_lift.dataset.status = "busy"
-   
-// }
-// }
 
 
