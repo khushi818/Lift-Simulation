@@ -197,7 +197,7 @@ const lift_call = (height,lift_class,checkboxes,floor,item) => {
    {     
       pending_request.push(item)
       console.log(item)
-      message.textContent = 'OH NO! lifts are busy, try again in few second!'
+      message.textContent = 'Please wait......'
       lift_busy = true
    }     
    else{
