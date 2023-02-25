@@ -7,7 +7,7 @@ const message = document.getElementById('message')
 
 
 let array_of_block_lift =[] // stores floors distance   
-
+let lift_busy = false
 /* refresh the page */
 refresh.addEventListener('click',()=>{
     window.location.reload()
@@ -78,58 +78,99 @@ generate.addEventListener('click',()=>
             array_of_block_lift[i] = 0;
    }
    
-   
+
    console.log(up.forEach(floors => console.log(floors.parentNode)))
    console.log(down.forEach(floors => console.log(floors.parentNode)))
-    
+setInterval(()=>{ 
+  check_busy(lift_class)
+   if(check_pending() && !lift_busy) { 
+      const pending_Interval = setInterval(()=>{
+      if(pending_request.length === 0)
+      {
+         clearInterval(pending_Interval)
+      }     
+         let floor = pending_request[0].parentElement.dataset.column
+         lift_call(height,lift_class,checkboxes,floor,pending_request[0])
+         pending_request.shift();
+         },1000)
+   } 
+},1000)
    /* to move lifts */
-
    up.forEach(item => {
-            item.addEventListener('click', (e)=>{ 
+        
+        item.addEventListener('click', (e)=>{
+       
               console.log(`parentElement = ${item.parentElement}`)
               let floor = item.parentElement.dataset.column
               lift_call(height,lift_class,checkboxes,floor,item)
-            });
-         
-   })
+      
+      });
+   })     
+
 
    down.forEach(item => {
-        item.addEventListener('click', (e)=>{
-            console.log(`parentElement = ${item.parentElement}`)
-            let floor = item.parentElement.dataset.column
-            lift_call(height,lift_class,checkboxes,floor,item)
-        })
-      }
-   )
-    
+         check_busy(lift_class)
+        
+       item.addEventListener('click', (e)=>{
+        
+           console.log(`parentElement = ${item.parentElement}`)
+           let floor = item.parentElement.dataset.column
+           lift_call(height,lift_class,checkboxes,floor,item)
+      })
+      
 })
 
+})
 let pending_request = []
 
 /* pending if both lifts are waiting */
-const check_pending = () =>{
-   pending_request = new Set(pending_request)
-   pending_request = [...pending_request]   
+// const waiting= (item)=>{
+  
+  
+// }
+
+const check_pending = () =>{   
    if(pending_request.length > 0)
    {
        return true
    }
    return false   
-
 }
 
+const check_busy = (lift_class) =>{
+    const lift = Object.values(lift_class).filter((lift_block)=>{
+         return lift_block.dataset.status === "free"
+   })[0]
 
+   if(lift === undefined)
+   {
+    lift_busy = true  
+   }
+   else{
+      lift_busy = false
+   }
+}
 /* to check the status*/
 const check_status = (lift_class) =>{
    const lift = Object.values(lift_class).filter((lift_block)=>{
          return lift_block.dataset.status === "free"
-   })[0]
+   })[0] 
+
+   if(lift === undefined)
+   {
+    lift_busy = true  
+    console.log(`lift_busy = ${lift_busy}`)
+   }
+   else{
+       lift_busy = false
+   }
+
    if(!lift) return lift_class[0]
    else return lift
 }
 
 /* determine the position of lift*/
-const check_height_and_lift_number = (height,lift_class) =>{
+const check_height_and_lift_number = (lift_class) =>{
     let lift =  check_status(lift_class)  
     console.log(lift)
     lift_id = lift.dataset.value ;
@@ -137,12 +178,10 @@ const check_height_and_lift_number = (height,lift_class) =>{
 }
 
 /* evenlistener function to go up*/
-const lift_call = (height,lift_class,checkboxes,floor) => {
-   // if(check_pending()) { 
-   //    waiting(pending_request.shift()) 
-   // }  
-   let [lift,lift_id] = check_height_and_lift_number(height,lift_class)
-      
+const lift_call = (height,lift_class,checkboxes,floor,item) => {
+       
+   let [lift,lift_id] = check_height_and_lift_number(lift_class)
+   
    console.log(`floor = ${floor}`)
    console.log(`the position = ${height * floor}`)
    
@@ -151,15 +190,18 @@ const lift_call = (height,lift_class,checkboxes,floor) => {
    array_of_block_lift[lift_id] = floor_distance
    let floor_difference = Math.abs(lift.dataset.current - floor)
    
-   if(lift.dataset.status === "busy")
-   {
+    if(lift_busy)
+   {     
+      pending_request.push(item)
+      console.log(item)
       message.textContent = 'OH NO! lifts are busy, try again in few second!'
-      // pending_request.push(floor)
-      // console.log(pending_request)
-   }   
+      lift_busy = true
+   }     
    else{
-      message.textContent = 'lifts are free for you'
-   setTimeout(()=>{  
+  
+       message.textContent = 'lifts are free for you'
+       lift_busy = false      
+       setTimeout(()=>{  
         lift.dataset.status = "busy"
         document.getElementById(`${lift_id}`).style.transform = `translateY(-${array_of_block_lift[lift_id]}px)`
         document.getElementById(`${lift_id}`).style.transitionDuration = `${2 * floor_difference}s`
