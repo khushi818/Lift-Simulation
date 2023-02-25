@@ -89,9 +89,12 @@ setInterval(()=>{
       {
          clearInterval(pending_Interval)
       }     
+      else{
          let floor = pending_request[0].parentElement.dataset.column
+         console.log("lift is on the way")
          lift_call(height,lift_class,checkboxes,floor,pending_request[0])
          pending_request.shift();
+      }
          },1000)
    } 
 },1000)
