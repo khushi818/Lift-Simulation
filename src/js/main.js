@@ -81,6 +81,7 @@ generate.addEventListener('click',()=>
 
 console.log(up.forEach(floors => console.log(floors.parentNode)))
 console.log(down.forEach(floors => console.log(floors.parentNode)))
+
 setInterval(()=>{ 
   check_busy(lift_class)
    if(check_pending() && !lift_busy) { 
@@ -90,12 +91,11 @@ setInterval(()=>{
          clearInterval(pending_Interval)
       }     
       else{
-         setTimeout(()=>{
          let floor = pending_request[0].parentElement.dataset.column
          console.log("lift is on the way")
          lift_call(height,lift_class,checkboxes,floor,pending_request[0])
          pending_request.shift();
-         },1000)
+         
       }
          },1000)
    } 
@@ -107,9 +107,8 @@ setInterval(()=>{
         item.addEventListener('click', (e)=>{
               console.log(`parentElement = ${item.parentElement}`)
               let floor = item.parentElement.dataset.column
-              setTimeout(()=>{
+              
               lift_call(height,lift_class,checkboxes,floor,item)
-              },1000)
       });
    })     
 
@@ -119,10 +118,8 @@ setInterval(()=>{
         
        item.addEventListener('click', (e)=>{
            console.log(`parentElement = ${item.parentElement}`)
-           let floor = item.parentElement.dataset.column
-           setTimeout(()=>{           
+           let floor = item.parentElement.dataset.column           
            lift_call(height,lift_class,checkboxes,floor,item)
-           },1000)
       })
       
 })
@@ -196,12 +193,16 @@ const lift_call = (height,lift_class,checkboxes,floor,item,floor_number) => {
     if(lift_busy)
    {     
       pending_request.push(item)
-      // pending_request = new Set(pending_request)
-      // pending_request = [...pending_request]
+      pending_request = new Set(pending_request)
+      pending_request = [...pending_request]
       console.log(item)
       message.textContent = 'Please wait......'
       lift_busy = true
-   }     
+   }   
+   else if(lift.dataset.current === floor)
+   {
+      message.textContent = `Either go up or down, you are on the same floor`
+   }  
    else{  
        message.textContent = 'lifts are free for you'
        lift_busy = false      
