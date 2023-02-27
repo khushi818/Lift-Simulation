@@ -79,8 +79,8 @@ generate.addEventListener('click',()=>
    }
    
 
-   console.log(up.forEach(floors => console.log(floors.parentNode)))
-   console.log(down.forEach(floors => console.log(floors.parentNode)))
+console.log(up.forEach(floors => console.log(floors.parentNode)))
+console.log(down.forEach(floors => console.log(floors.parentNode)))
 setInterval(()=>{ 
   check_busy(lift_class)
    if(check_pending() && !lift_busy) { 
@@ -90,35 +90,39 @@ setInterval(()=>{
          clearInterval(pending_Interval)
       }     
       else{
+         setTimeout(()=>{
          let floor = pending_request[0].parentElement.dataset.column
          console.log("lift is on the way")
          lift_call(height,lift_class,checkboxes,floor,pending_request[0])
          pending_request.shift();
+         },1000)
       }
          },1000)
    } 
 },1000)
+
    /* to move lifts */
    up.forEach(item => {
         
         item.addEventListener('click', (e)=>{
-       
               console.log(`parentElement = ${item.parentElement}`)
               let floor = item.parentElement.dataset.column
+              setTimeout(()=>{
               lift_call(height,lift_class,checkboxes,floor,item)
-      
+              },1000)
       });
    })     
 
-
+   
    down.forEach(item => {
          check_busy(lift_class)
         
        item.addEventListener('click', (e)=>{
-        
            console.log(`parentElement = ${item.parentElement}`)
            let floor = item.parentElement.dataset.column
+           setTimeout(()=>{           
            lift_call(height,lift_class,checkboxes,floor,item)
+           },1000)
       })
       
 })
@@ -126,11 +130,6 @@ setInterval(()=>{
 })
 let pending_request = []
 
-/* pending if both lifts are waiting */
-// const waiting= (item)=>{
-  
-  
-// }
 
 const check_pending = () =>{   
    if(pending_request.length > 0)
@@ -153,6 +152,7 @@ const check_busy = (lift_class) =>{
       lift_busy = false
    }
 }
+
 /* to check the status*/
 const check_status = (lift_class) =>{
    const lift = Object.values(lift_class).filter((lift_block)=>{
@@ -181,7 +181,7 @@ const check_height_and_lift_number = (lift_class) =>{
 }
 
 /* evenlistener function to go up*/
-const lift_call = (height,lift_class,checkboxes,floor,item) => {
+const lift_call = (height,lift_class,checkboxes,floor,item,floor_number) => {
        
    let [lift,lift_id] = check_height_and_lift_number(lift_class)
    
@@ -196,12 +196,13 @@ const lift_call = (height,lift_class,checkboxes,floor,item) => {
     if(lift_busy)
    {     
       pending_request.push(item)
+      // pending_request = new Set(pending_request)
+      // pending_request = [...pending_request]
       console.log(item)
       message.textContent = 'Please wait......'
       lift_busy = true
    }     
-   else{
-  
+   else{  
        message.textContent = 'lifts are free for you'
        lift_busy = false      
        setTimeout(()=>{  
@@ -217,8 +218,10 @@ const lift_call = (height,lift_class,checkboxes,floor,item) => {
             checkboxes[lift.dataset.value].style.transitionDuration = `2.5s`
             }
             setTimeout(()=>{
+               
                checkboxes[lift.dataset.value].checked = true
                lift.dataset.status = "free"
+               
             },2500)
          },`${2 * floor_difference*1000}`);
    },0)
