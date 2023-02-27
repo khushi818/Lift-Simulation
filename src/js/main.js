@@ -177,20 +177,31 @@ const check_height_and_lift_number = (lift_class) =>{
     return [lift,lift_id]
 }
 
+let lift_on_the_same_floor = true
 /* evenlistener function to go up*/
-const lift_call = (height,lift_class,checkboxes,floor,item,floor_number) => {
+const lift_call = (height,lift_class,checkboxes,floor,item) => {
        
    let [lift,lift_id] = check_height_and_lift_number(lift_class)
    
    console.log(`floor = ${floor}`)
    console.log(`the position = ${height * floor}`)
    
+   
    console.log(`difference in floor(${Math.abs(lift.dataset.current - floor)})`)
    let floor_distance = height * floor
    array_of_block_lift[lift_id] = floor_distance
    let floor_difference = Math.abs(lift.dataset.current - floor)
    
-    if(lift_busy)
+    
+   for(let lift of lift_class)
+   {
+         if(lift.dataset.current !== floor )
+         {
+             lift_on_the_same_floor = false
+         }
+         
+   }
+   if(lift_busy)
    {     
       pending_request.push(item)
       pending_request = new Set(pending_request)
@@ -199,11 +210,11 @@ const lift_call = (height,lift_class,checkboxes,floor,item,floor_number) => {
       message.textContent = 'Please wait......'
       lift_busy = true
    }   
-   else if(lift.dataset.current === floor)
+   else if(lift_on_the_same_floor)
    {
       message.textContent = `Either go up or down, you are on the same floor`
-   }  
-   else{  
+   }
+   else{
        message.textContent = 'lifts are free for you'
        lift_busy = false      
        setTimeout(()=>{  
@@ -227,6 +238,7 @@ const lift_call = (height,lift_class,checkboxes,floor,item,floor_number) => {
          },`${2 * floor_difference*1000}`);
    },0)
 }
+
 }
 
 
