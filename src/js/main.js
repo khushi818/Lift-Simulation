@@ -177,7 +177,18 @@ const check_height_and_lift_number = (lift_class) =>{
     return [lift,lift_id]
 }
 
-let lift_on_the_same_floor = true
+function allEqual(arr,floor) {
+  let lifts_current = arr.filter((a) =>{
+     return a.dataset.current === floor
+  }).map((a) =>{
+     return a
+  }) 
+
+  console.log(lifts_current)
+  return lifts_current.length == arr.length;
+}
+
+
 /* evenlistener function to go up*/
 const lift_call = (height,lift_class,checkboxes,floor,item) => {
        
@@ -192,20 +203,13 @@ const lift_call = (height,lift_class,checkboxes,floor,item) => {
    array_of_block_lift[lift_id] = floor_distance
    let floor_difference = Math.abs(lift.dataset.current - floor)
    
-    
-   for(let lift of lift_class)
-   {
-         if(lift.dataset.current !== floor )
-         {
-             lift_on_the_same_floor = false
-         }
-         
-   }
+   let lift_on_the_same_floor = allEqual(Object.values(lift_class),floor)
+
    if(lift_busy)
    {     
       pending_request.push(item)
-      pending_request = new Set(pending_request)
-      pending_request = [...pending_request]
+      // pending_request = new Set(pending_request)
+      // pending_request = [...pending_request]
       console.log(item)
       message.textContent = 'Please wait......'
       lift_busy = true
